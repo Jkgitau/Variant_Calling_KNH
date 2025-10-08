@@ -45,7 +45,7 @@ do
 done
 ```
 
-#### Step 2
+#### Step 2: Aligning reads to the reference genome
 Clean reads were aligned to the hg19 reference genome to determine their genomic origin. Although this was a targeted study, reads were first mapped to the whole genome, and variants were later restricted to chromosome 13 exons using a BED file.
 
 Importance: ensures accurate alignment and variant calling in the regions of interest.
