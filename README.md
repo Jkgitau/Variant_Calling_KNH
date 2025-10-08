@@ -1,4 +1,4 @@
-# Variant_Calling_KNH
+###  Variant Calling Analysis of 70 Kenyan Retinoblastoma Kinds
 A repository with Code, and results from the Kenya RB1 Study
 
 
