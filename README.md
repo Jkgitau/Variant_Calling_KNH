@@ -145,7 +145,7 @@ for BAM in "$INPUT_DIR"/*.bam; do
 done
 ```
 
-#### Step 4a: Base Quality Recalibration
+#### Step 4a: Base Quality Recalibration (BQSR) – Model Building
 Base Quality Score Recalibration (BQSR) corrects systematic errors made by the sequencer when estimating base call accuracy. In targeted variant calling, this step is important because even small biases in quality scores can lead to false positives or missed variants in the focused regions of interest, thereby improving the precision of variant detection.
 
 ```
@@ -184,5 +184,49 @@ for BAM in "$INPUT_DIR"/*.bam; do
         --known-sites "$KNOWN_SITES" \
         -O "$OUTPUT_DIR/${BASENAME}_recal_data.table"
 done
+```
+
+#### Step 4b: Base Quality Recalibration (BQSR) – Model Deployment
+BQSR is critical in targeted variant calling because it corrects systematic errors made by the sequencer in assigning base quality scores. Deploying this model ensures that recalibration is applied consistently across all samples, reducing false positives and false negatives. This step is especially important in targeted studies, where high accuracy in a small genomic region is essential for confident variant detection and downstream interpretation.
+
+```
+#!/usr/bin/bash -l
+#SBATCH -p batch                                   # Partition to submit to
+#SBATCH -J variant_cal                             # Job name
+#SBATCH -n 16                                      # Number of CPU cores requested
+#SBATCH -o ../error_reports/Apply_bqsr.out         # Standard output log
+#SBATCH -e ../error_reports/Apply_bqsr.err         # Standard error log
+
+
+# Load required GATK module
+module load gatk/4.4.0.0
+
+
+# Define directories
+INPUT_DIR="../../input_data/variant_calling/entire_genome/marked_duplicates"
+OUTPUT_DIR="../..results/variant_calling/entire_genome/base_quality_recalibration_step_2"
+REFERENCE="../reference_genome/RB1_variant_calling/entire_genome/reference/hg19/GCF_000001405.13_GRCh37_genomic.fna"
+BQSR_DIR="../results/variant_calling/entire_genome/base_quality_recalibration"
+
+# Create output directory if it doesn't exist
+mkdir -p "$OUTPUT_DIR"
+
+# Loop through all BAM files
+for bam_file in "$INPUT_DIR"/*.sorted_dedup.bam; do
+    # Extract the base filename (without path)
+    bam_filename=$(basename "$bam_file")
+    # Remove the .bam extension to get sample base
+    sample_base="${bam_filename%.bam}"   # Example: C001_S1.sorted_dedup
+
+    echo "Processing sample: $sample_base"
+
+    gatk ApplyBQSR \
+        -I "$bam_file" \
+        -R "$REFERENCE" \
+        --bqsr-recal-file "$BQSR_DIR/${sample_base}_recal_data.table" \
+        -O "$OUTPUT_DIR/${sample_base}.bqsr.bam"
+done
+
+echo "All samples processed!"
 ```
 
