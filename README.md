@@ -112,7 +112,7 @@ done
 #### Step 3: Marking duplicates
 Duplicate reads, often introduced during PCR amplification in targeted sequencing, can artificially inflate coverage and bias variant calling. Marking duplicates ensures that only unique molecules contribute to variant detection, improving the accuracy and reliability of downstream analyses.
 
-Get GATK standard high confidence SNPS and annotation files (here)[ https://console.cloud.google.com/storage/browser/gcp-public-data--broad-references/hg19/v0;tab=objects?pageState=(%22StorageObjectListTable%22:(%22f%22:%22%255B%255D%22))&prefix=&forceOnObjectsSortingFiltering=false]
+Get GATK standard high confidence SNPS and annotation files [here]( https://console.cloud.google.com/storage/browser/gcp-public-data--broad-references/hg19/v0;tab=objects?pageState=(%22StorageObjectListTable%22:(%22f%22:%22%255B%255D%22))&prefix=&forceOnObjectsSortingFiltering=false)
 
 ```
 #!/usr/bin/bash -l
