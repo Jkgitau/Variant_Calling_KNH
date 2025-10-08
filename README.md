@@ -2,8 +2,9 @@
 A repository with Code, and results from the Kenya RB1 Study
 
 
-### Note
+## Note:
 To re-use these Analysis scripts, you have to update your file paths accordingly
+
 
 
 ## These are important links used in this Analysis
