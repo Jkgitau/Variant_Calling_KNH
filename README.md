@@ -8,7 +8,7 @@ A repository with Code, and results from the Kenya RB1 Study
 
 
 ------------------------------------------------------------------------------------------------
-### These are important links used in this Analysis
+### Some useful Links 
 
 High confidence SNPS and annotation files: https://console.cloud.google.com/storage/browser/gcp-public-data--broad-references/hg19/v0;tab=objects?pageState=(%22StorageObjectListTable%22:(%22f%22:%22%255B%255D%22))&prefix=&forceOnObjectsSortingFiltering=false
 
@@ -106,6 +106,40 @@ for R1 in "$INPUT_DIR"/*_trimmed_R1.fastq.gz; do
     samtools index "$OUT_BAM"
 
     echo "Finished processing $SAMPLE."
+done
+```
+
+#### Step 3: Marking duplicates
+Duplicate reads, often introduced during PCR amplification in targeted sequencing, can artificially inflate coverage and bias variant calling. Marking duplicates ensures that only unique molecules contribute to variant detection, improving the accuracy and reliability of downstream analyses.
+
+```
+#!/usr/bin/bash -l
+#SBATCH -p batch
+#SBATCH -J mark-dup
+#SBATCH -n 6
+#SBATCH -o ../error_reports/mark_dup.out    # Standard output log
+#SBATCH -e ../error_reports/mark_dups.err    # Standard error log
+
+# Define Picard JAR path
+PICARD_JAR="/export/apps/picard/2.8.2/picard.jar"
+
+# Define directories
+INPUT_DIR="/input_files/variant_calling/entire_genome/hg19/aligned_bam_files"
+OUTPUT_DIR="/results/variant_calling/entire_genome/hg19/duplicates_marked"
+
+# Create output directory if it does not exist
+mkdir -p "$OUTPUT_DIR"
+
+
+# Run MarkDuplicates on each BAM file
+for BAM in "$INPUT_DIR"/*.bam; do
+    BASENAME=$(basename "$BAM" .bam)
+    java -jar "$PICARD_JAR" MarkDuplicates \
+        INPUT="$BAM" \
+        OUTPUT="$OUTPUT_DIR/${BASENAME}_dedup.bam" \
+        METRICS_FILE="$OUTPUT_DIR/${BASENAME}_metrics.txt" \
+        CREATE_INDEX=true \
+        VALIDATION_STRINGENCY=SILENT
 done
 ```
 
