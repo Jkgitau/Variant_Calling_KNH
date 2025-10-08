@@ -4,7 +4,7 @@ A repository with Code, and results from the Kenya RB1 Study
 
 ### Note:
 * To re-use these Analysis scripts, you have to update your file paths accordingly.
-* ake a copy of raw Fastq files before starting manipulating the files (Back-up).
+* Make a copy of raw Fastq files before starting manipulating the files (Back-up).
 
 
 ------------------------------------------------------------------------------------------------
