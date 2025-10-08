@@ -1,4 +1,4 @@
-###  Variant Calling Analysis of 70 Kenyan Retinoblastoma Kinds
+###  Variant Calling Analysis of 70 Kenyan Retinoblastoma Kids
 A repository with Code, and results from the Kenya RB1 Study
 
 
