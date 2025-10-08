@@ -17,12 +17,31 @@ Reference Analysis steps (Melbrone Univesity): https://console.cloud.google.com/
 
 ------------------------------------------------------------------------------------------------
 
-# Step 1: Quality Assessment of Fastq File
+### Step 1: Quality Assessment of Fastq Files
 Read More here: https://hbctraining.github.io/Training-modules/planning_successful_rnaseq/lessons/QC_raw_data.html
 
-We used FastQC tool to check for any sequencing errors, duplicates, GC Content, overrepresented sequences etc.
+We used FastQC to assess sequencing quality, including potential errors, duplicate reads, GC content, and overrepresented sequences. Reads with a Phred score below 20 were removed before further processing. After this cleaning step, the data were re-evaluated with FastQC to confirm that the retained reads were of high quality.
 
 ```
+#!/usr/bin/bash -l                                # Shebang
+#SBATCH -p batch                                  # Partition to submit to
+#SBATCH -J fastqc                                 # Job name
+#SBATCH -n 8                                      # Number of CPU cores requested
 
+# Load modules
+fastqc/0.11.9
+
+# Define file directories
+INPUT_DIR="../../../RB_data/trimmed_fastq_data/copy_of_trimmed_reads/"
+OUTPUT_DIR="/var/scratch/global/emurungi/variant_calling/entire_genome/hg19/fastq_files"
+
+# Make sure output directory exists
+mkdir -p "$OUTPUT_DIR"
+
+# Loop through FASTQ files
+for file in "$INPUT_DIR"/*.fastq.gz
+do
+    fastqc "$file" -o "$OUTPUT_DIR"
+done
 ```
 
