@@ -51,26 +51,26 @@ Clean reads were aligned to the hg19 reference genome to determine their genomic
 Importance: ensures accurate alignment and variant calling in the regions of interest.
 
 ```
-#!/usr/bin/bash -l                 #Shebang
-#SBATCH -p batch                   # Partition to submit to
-#SBATCH -J align_and_sort          # Job name
-#SBATCH -n 12                      # Number of CPU cores requested
+#!/usr/bin/bash -l
+#SBATCH -p batch                                  # Partition to submit to
+#SBATCH -J align_and_sort                         # Job name
+#SBATCH -n 4                                     # Number of CPU cores requested
 #SBATCH -o align_and_sort.out      # Standard output log
 #SBATCH -e align_and_sort.err      # Standard error log
 
-# Load required modules
+# Load modules
 #module load bwa/0.7.18
 module load bwa/0.7.19
 module load samtools/1.17
 
-# Define paths to hg38 reference genome
-#REF="../..reference/RB1_variant_calling/entire_genome/reference/hg38/Homo_sapiens_assembly38.fasta"
-#OUTPUT_DIR="..results/variant_calling/entire_genome/alignment"
-#INPUT_DIR="..input/RB1_variant_calling/RB_data/trimmed_fastq_data"
+# Define paths
+#REF="../../RB1_variant_calling/entire_genome/reference/hg38/Homo_sapiens_assembly38.fasta"
+#OUTPUT_DIR="../variant_calling/entire_genome/alignment"
+#INPUT_DIR="../RB1_variant_calling/RB_data/trimmed_fastq_data"
 
-REF="../..reference/reference/RB1_variant_calling/entire_genome/hg19_analysis/reference_genome/GCF_000001405.13_GRCh37_genomic.fna"
-OUTPUT_DIR="..results/variant_calling/entire_genome/hg19/aligned_bam_files"
-INPUT_DIR="../..input/RB1_variant_calling/RB_data/trimmed_fastq_data"
+REF="../reference/RB1_variant_calling/entire_genome/hg19_analysis/reference_genome/reference_genome_GATk_bundle/Homo_sapiens_assembly19.fasta"
+OUTPUT_DIR="../output/variant_calling/entire_genome/hg19/GAT_bundle_aligned_bam_files"
+INPUT_DIR="../input/RB1_variant_calling/RB_data/trimmed_fastq_data"
 
 # Create output directory if it doesn't exist
 mkdir -p "$OUTPUT_DIR"
@@ -118,7 +118,7 @@ Get GATK standard high confidence SNPS and annotation files [here]( https://cons
 #!/usr/bin/bash -l
 #SBATCH -p batch
 #SBATCH -J mark-dup
-#SBATCH -n 6
+#SBATCH -n 4
 #SBATCH -o ../error_reports/mark_dup.out    # Standard output log
 #SBATCH -e ../error_reports/mark_dups.err    # Standard error log
 
@@ -126,8 +126,8 @@ Get GATK standard high confidence SNPS and annotation files [here]( https://cons
 PICARD_JAR="/export/apps/picard/2.8.2/picard.jar"
 
 # Define directories
-INPUT_DIR="/input_files/variant_calling/entire_genome/hg19/aligned_bam_files"
-OUTPUT_DIR="/results/variant_calling/entire_genome/hg19/duplicates_marked"
+#INPUT_DIR="../input/variant_calling/entire_genome/hg19/aligned_bam_files"
+INPUT_DIR="../input/variant_calling/entire_genome/hg19/GAT_bundle_aligned_bam_files"
 
 # Create output directory if it does not exist
 mkdir -p "$OUTPUT_DIR"
@@ -143,6 +143,7 @@ for BAM in "$INPUT_DIR"/*.bam; do
         CREATE_INDEX=true \
         VALIDATION_STRINGENCY=SILENT
 done
+
 ```
 
 #### Step 4a: Base Quality Recalibration (BQSR) – Model Building
