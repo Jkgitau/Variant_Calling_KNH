@@ -189,7 +189,7 @@ BQSR is critical in targeted variant calling because it corrects systematic erro
 #!/usr/bin/bash -l
 #SBATCH -p batch                                   # Partition to submit to
 #SBATCH -J variant_cal                             # Job name
-#SBATCH -n 16                                      # Number of CPU cores requested
+#SBATCH -n 12                                      # Number of CPU cores requested
 #SBATCH -o ../error_reports/Apply_bqsr.out         # Standard output log
 #SBATCH -e ../error_reports/Apply_bqsr.err         # Standard error log
 
@@ -199,10 +199,10 @@ module load gatk/4.4.0.0
 
 
 # Define directories
-INPUT_DIR="../../input_data/variant_calling/entire_genome/marked_duplicates"
-OUTPUT_DIR="../..results/variant_calling/entire_genome/base_quality_recalibration_step_2"
-REFERENCE="../reference_genome/RB1_variant_calling/entire_genome/reference/hg19/GCF_000001405.13_GRCh37_genomic.fna"
-BQSR_DIR="../results/variant_calling/entire_genome/base_quality_recalibration"
+INPUT_DIR="../../input_data/variant_calling/entire_genome/hg19/GAT_standard_duplicates_marked"
+OUTPUT_DIR="../results/variant_calling/entire_genome/hg19/base_quality_recalibration_step_2"
+REFERENCE="reference/RB1_variant_calling/entire_genome/hg19_analysis/reference_genome/reference_genome_GATk_bundle/Homo_sapiens_assembly19.fasta"
+BQSR_DIR="../output/variant_calling/entire_genome/hg19/base_quality_recalibration"
 
 # Create output directory if it doesn't exist
 mkdir -p "$OUTPUT_DIR"
@@ -223,6 +223,7 @@ for bam_file in "$INPUT_DIR"/*.sorted_dedup.bam; do
         -O "$OUTPUT_DIR/${sample_base}.bqsr.bam"
 done
 
-echo "All samples processed!"
+echo "All samples processed!" 
+
 ```
 
