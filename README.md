@@ -17,6 +17,9 @@ Reference Analysis steps (Melbrone Univesity): https://console.cloud.google.com/
 
 ------------------------------------------------------------------------------------------------
 
+## Part 1: Data Pre-Processing
+
+
 #### Step 1: Quality Assessment of Fastq Files
 Read More here: https://hbctraining.github.io/Training-modules/planning_successful_rnaseq/lessons/QC_raw_data.html
 
@@ -225,3 +228,5 @@ echo "All samples processed!"
 
 ```
 
+
+## Part 2: Variant Calling
