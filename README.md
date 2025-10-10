@@ -230,3 +230,47 @@ echo "All samples processed!"
 
 
 ## Part 2: Variant Calling
+
+Variant calling with GATK HaplotypeCaller uses aligned sequencing reads against a reference genome (hg19) to detect single nucleotide variants and small insertions or deletions, and restricting the analysis with a BED file of chromosome 13 coordinates (e.g., the RB1 exons) ensures the search is focused on clinically relevant regions. This targeted approach improves accuracy, reduces noise from irrelevant loci, and is essential for identifying germline variants, which are inherited changes present in all cells and underlie hereditary diseases such as retinoblastoma.
+
+```
+#!/usr/bin/bash -l
+#SBATCH -p batch                                     # Partition to submit to
+#SBATCH -J run_haplotypecaller                       # Job name
+#SBATCH -n 8                                         # Number of CPU cores requested
+#SBATCH -o ../error_reports/apply_haplotypecaller.out  # Standard output log
+#SBATCH -e ../error_reports/apply_haplotypecaller.err  # Standard error log
+
+# Load required GATK module
+module load gatk/4.4.0.0
+
+# Define directories
+INPUT_DIR="../input_data/variant_calling/entire_genome/hg19/base_quality_recalibration_step_2"
+REFERENCE="reference_genome/RB1_variant_calling/entire_genome/hg19_analysis/reference_genome/reference_genome_GATk_bundle/Homo_sapiens_assembly19.fasta"
+OUTPUT_DIR="results/variant_calling/entire_genome/hg19/Rb1_region_only_variants"
+rb1_bed_file="../annotation_file/RB1_variant_calling/entire_genome/hg19_analysis/annotaion_files_hg19/RB1_exons_coordinates.bed"
+
+# Create output directory if it doesn't exist
+mkdir -p "$OUTPUT_DIR"
+
+# ---------------------
+# Loop through BAM files and run HaplotypeCaller
+# ---------------------
+echo "Starting HaplotypeCaller for all samples..."
+
+for bam_file in "$INPUT_DIR"/*.bqsr.bam; do
+    bam_base=$(basename "$bam_file" .bqsr.bam)  # Get sample name (e.g., C001_S1.sorted_dedup)
+
+    echo "Processing sample: $bam_base"
+
+    gatk HaplotypeCaller \
+        -I "$bam_file" \
+        -R "$REFERENCE" \
+        -ERC GVCF \
+        -L  "$rb1_bed_file"\
+        -O "$OUTPUT_DIR/${bam_base}.g.vcf.gz"
+done
+
+echo "All samples processed with HaplotypeCaller!" 
+```
+
