@@ -21,18 +21,16 @@ mkdir -p "$OUTPUT_DIR"
 
 # Loop through all BAM files
 for bam_file in "$INPUT_DIR"/*.sorted_dedup.bam; do
-    # Extract the base filename (without path)
-    bam_filename=$(basename "$bam_file")
-    # Remove the .bam extension to get sample base
-    sample_base="${bam_filename%.bam}"   # Example: C001_S1.sorted_dedup
+    # Extract the sample base (remove the .sorted_dedup.bam part)
+    sample_base=$(basename "$bam_file" .sorted_dedup.bam)
 
     echo "Processing sample: $sample_base"
 
     gatk ApplyBQSR \
         -I "$bam_file" \
         -R "$REFERENCE" \
-        --bqsr-recal-file "$BQSR_DIR/${sample_base}_recal_data.table" \
-        -O "$OUTPUT_DIR/${sample_base}.bqsr.bam"
+        --bqsr-recal-file "$BQSR_DIR/${sample_base}.sorted_recal_data.table" \
+        -O "$OUTPUT_DIR/${sample_base}.sorted_dedup.bqsr.bam"
 done
 
-echo "All samples processed!" 
+echo "All samples processed!"
