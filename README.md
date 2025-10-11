@@ -14,6 +14,9 @@ High confidence SNPS and annotation files: https://console.cloud.google.com/stor
 
 Reference Analysis steps (Melbrone Univesity): https://console.cloud.google.com/storage/browser/gcp-public-data--broad-references/hg19/v0;tab=objects?pageState=(%22StorageObjectListTable%22:(%22f%22:%22%255B%255D%22))&prefix=&forceOnObjectsSortingFiltering=false
 
+Where did I get the genomic coordinates of Rb1 in hg19 genome?
+https://mgend.jihs.go.jp/gene/info/5925#:~:text=Symbol%20RB1%20Type%20protein%2Dcoding,Links%20NCBI%20Gene%20Cards%20OncoKB
+
 
 ------------------------------------------------------------------------------------------------
 
